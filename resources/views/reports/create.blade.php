@@ -45,10 +45,12 @@
 			</input>
 		</div>
 		<div class="form-group">
+			<!-- Laravel CSRF protection  -->
+			<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
+		</div>
+		<div class="form-group">
 			<input type="submit" value="Gerar!" class="btn btn-primary">
 		</div>
-		<!-- Laravel CSRF protection  -->
-		<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
 	</form>
 </body>
 </html>

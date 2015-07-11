@@ -19,7 +19,7 @@
 				Ano de início da Progressão: <?php echo $year ?>
 			</h4>
 		</div>
-		<div class="form-group" hidden>
+		<div class="form-group">
 			<h4>
 				Pontos por bolsa de produtividade do CNPq:  <?php echo $points['bolsas'] ?>
 			</h4>
@@ -49,6 +49,8 @@
 				Pontos por textos em jornais ou revistas: <?php echo $points['textos'] ?>
 			</h4>
 		</div>
+		<!-- Laravel CSRF protection  -->
+		<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
 	</div>
 </body>
 </html>

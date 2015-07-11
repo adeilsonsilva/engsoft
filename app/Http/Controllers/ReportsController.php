@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
-use Session;
+use Illuminate\Support\Facades\Session;
 
 use App\Lattes;
 
@@ -44,8 +44,8 @@ class ReportsController extends Controller
         if ($request->file('lattes')->isValid()){
             $name = $request->input('name');
             $year = $request->input('year');
-            // $lattesFile = $request->file('lattes');
-            $lattes = new Lattes($request->file('lattes'), $year);
+            /* Some functions to 'clear' the xml non-utf8 string */
+            $lattes = new Lattes(htmlentities(utf8_encode(file_get_contents(($request->file('lattes')->getRealPath())))), $year);
             $points = $lattes->parseXML();
             return Redirect::action('ReportsController@show')->with('points', $points)
                                         ->with('name', $name)
