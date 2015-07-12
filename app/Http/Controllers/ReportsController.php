@@ -45,11 +45,12 @@ class ReportsController extends Controller
             $name = $request->input('name');
             $year = $request->input('year');
             /* Some functions to 'clear' the xml non-utf8 string */
-            $lattes = new Lattes(htmlentities(utf8_encode(file_get_contents(($request->file('lattes')->getRealPath())))), $year);
+            $lattes = new Lattes(utf8_encode(file_get_contents(($request->file('lattes')->getRealPath()))), $year);
             $points = $lattes->parseXML();
-            return Redirect::action('ReportsController@show')->with('points', $points)
-                                        ->with('name', $name)
-                                        ->with('year', $year);
+            return Redirect::action('ReportsController@show')
+                                    ->with('points', $points)
+                                    ->with('name', $name)
+                                    ->with('year', $year);
         }
     }
 
