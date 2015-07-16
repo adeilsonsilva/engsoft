@@ -3,54 +3,87 @@
 <head>
 	<meta charset="UTF-8">
 	<title>EngSoft</title>
-	<link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css')
-	   }}" rel="stylesheet">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+	<link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+   	<link href="{{ asset('css/main.css') }}" rel="stylesheet">
+   	<script src="{{ asset('js/main.js') }}" type="text/javascript"></script>
 </head>
 <body>
 	<div class="page-header">
 		<h1>Relatório</h1>
 		<h2>
-			<?php echo $name ?>
+			<?php echo $user->getName(); ?>
 		</h2>
 	</div>
 	<div class="container">
 		<div class="form-group">
 			<h4>
-				Ano de início da Progressão: <?php echo $year ?>
+				Ano de início da Progressão: <?php echo $user->getYear(); ?>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por bolsa de produtividade do CNPq:  <?php echo $points['bolsas'] ?>
+				Pontos por bolsa de produtividade do CNPq:  <?php echo $user->getPoints('bolsas'); ?>
+				<i class="fa fa-plus-square">
+					<div class="doi-links">
+						<?php $user->showOrigin('bolsas'); ?>
+					</div>
+				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por publicação de trabalhos completos em anais de congressos: <?php echo $points['trabalhos'] ?>
+				Pontos por publicação de trabalhos completos em anais de congressos: <?php echo $user->getPoints('trabalhos'); ?>
+				<i class="fa fa-plus-square">
+					<div class="doi-links">
+						<?php $user->showOrigin('trabalhos'); ?>
+					</div>
+				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por resumos: <?php echo $points['resumos'] ?>
+				Pontos por resumos: <?php echo $user->getPoints('resumos'); ?>
+				<i class="fa fa-plus-square">
+					<div class="doi-links">
+						<?php $user->showOrigin('resumos'); ?>
+					</div>
+				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por artigos publicados em periódicos especializados: <?php echo $points['artigos'] ?>
+				Pontos por artigos publicados em periódicos especializados: <?php echo $user->getPoints('artigos'); ?>
+				<i class="fa fa-plus-square">
+					<div class="doi-links">
+						<?php $user->showOrigin('artigos'); ?>
+					</div>
+				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por autoria ou co-autoria de livros: <?php echo $points['livros'] ?>
+				Pontos por autoria ou co-autoria de livros: <?php echo $user->getPoints('livros'); ?>
+				<i class="fa fa-plus-square">
+					<div class="doi-links">
+						<?php $user->showOrigin('livros'); ?>
+					</div>
+				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por textos em jornais ou revistas: <?php echo $points['textos'] ?>
+				Pontos por textos em jornais ou revistas: <?php echo $user->getPoints('textos'); ?>
+				<i class="fa fa-plus-square">
+					<div class="doi-links">
+						<?php $user->showOrigin('textos'); ?>
+					</div>
+				</i>
 			</h4>
 		</div>
-		<!-- Laravel CSRF protection  -->
-		<input name="_token" type="hidden" value="{{ csrf_token() }}"/>
 	</div>
+	<script>
+		show_divs();
+	</script>
 </body>
 </html>
