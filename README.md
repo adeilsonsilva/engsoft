@@ -5,8 +5,8 @@
 ##Conteúdo
 * Time de Desenvolvimento
 * Ferramentas utilizadas
-* Instalação do Mojolicious
-* Instalação do Mechanize
+* Instalação do Laravel
+* Instalação das Dependências
 * Como rodar
 
 ## Time de Desenvolvimento
@@ -28,6 +28,12 @@ $ sudo mv composer.phar /usr/local/bin/composer
 ##Instalação do Laravel
 ```
 $ composer global require "laravel/installer=~1.1"
+```
+##Instalação das Dependências
+```
+$ git clone https://github.com/AdeilsonSilva/engsoft.git
+$ cd engsoft
+$ composer install
 ```
 
 ## Como rodar
