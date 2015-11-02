@@ -12,71 +12,71 @@
 	<div class="page-header">
 		<h1>Relatório</h1>
 		<h2>
-			<?php echo $user->getName(); ?>
+			<?php echo $professor->getName(); ?>
 		</h2>
 	</div>
 	<div class="container">
 		<div class="form-group">
 			<h4>
-				Ano de início da Progressão: <?php echo $user->getYear(); ?>
+				Ano de início da Progressão: <?php echo $professor->getYear(); ?>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por bolsa de produtividade do CNPq:  <?php echo $user->getPoints('bolsas'); ?>
+				Pontos por bolsa de produtividade do CNPq:  <?php echo $professor->getPoints('bolsas'); ?>
 				<i class="fa fa-plus-square">
 					<div class="doi-links">
-						<?php $user->showOrigin('bolsas'); ?>
+						<?php $professor->showOrigin('bolsas'); ?>
 					</div>
 				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por publicação de trabalhos completos em anais de congressos: <?php echo $user->getPoints('trabalhos'); ?>
+				Pontos por publicação de trabalhos completos em anais de congressos: <?php echo $professor->getPoints('trabalhos'); ?>
 				<i class="fa fa-plus-square">
 					<div class="doi-links">
-						<?php $user->showOrigin('trabalhos'); ?>
+						<?php $professor->showOrigin('trabalhos'); ?>
 					</div>
 				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por resumos: <?php echo $user->getPoints('resumos'); ?>
+				Pontos por resumos: <?php echo $professor->getPoints('resumos'); ?>
 				<i class="fa fa-plus-square">
 					<div class="doi-links">
-						<?php $user->showOrigin('resumos'); ?>
+						<?php $professor->showOrigin('resumos'); ?>
 					</div>
 				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por artigos publicados em periódicos especializados: <?php echo $user->getPoints('artigos'); ?>
+				Pontos por artigos publicados em periódicos especializados: <?php echo $professor->getPoints('artigos'); ?>
 				<i class="fa fa-plus-square">
 					<div class="doi-links">
-						<?php $user->showOrigin('artigos'); ?>
+						<?php $professor->showOrigin('artigos'); ?>
 					</div>
 				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por autoria ou co-autoria de livros: <?php echo $user->getPoints('livros'); ?>
+				Pontos por autoria ou co-autoria de livros: <?php echo $professor->getPoints('livros'); ?>
 				<i class="fa fa-plus-square">
 					<div class="doi-links">
-						<?php $user->showOrigin('livros'); ?>
+						<?php $professor->showOrigin('livros'); ?>
 					</div>
 				</i>
 			</h4>
 		</div>
 		<div class="form-group">
 			<h4>
-				Pontos por textos em jornais ou revistas: <?php echo $user->getPoints('textos'); ?>
+				Pontos por textos em jornais ou revistas: <?php echo $professor->getPoints('textos'); ?>
 				<i class="fa fa-plus-square">
 					<div class="doi-links">
-						<?php $user->showOrigin('textos'); ?>
+						<?php $professor->showOrigin('textos'); ?>
 					</div>
 				</i>
 			</h4>

@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
-use App\User;
+use App\Professor;
 
 class ReportsController extends Controller
 {
@@ -41,26 +41,24 @@ class ReportsController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->file('lattes')->isValid()){
-            $name = $request->input('name');
-            $year = $request->input('year');
-            $file = utf8_encode(file_get_contents($request->file('lattes')->getRealPath()));
-            $user = new User($name, $file, $year);
-            $user->makeReport();
+        var_dump($request['professor']['lattes']);
+        if ($request['professor']['lattes']->isValid()){
+            $professor = new Professor($request['professor']);
+            $professor->makeReport();
             return Redirect::action('ReportsController@show')
-                                    ->with('user', $user);
+                                    ->with('professor', $professor);
         }
     }
 
     /**
-     * Show the points acquired by the user.
+     * Show the points acquired by the professor.
      *
      * @return Response
      */
     public function show()
     {
-        $user = Session::get('user');
-        return view('reports.show', compact('user'));
+        $professor = Session::get('professor');
+        return view('reports.show', compact('professor'));
     }
 
     /**
