@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -41,9 +43,10 @@ class ReportsController extends Controller
      */
     public function store(Request $request)
     {
-        var_dump($request['professor']['lattes']);
         if ($request['professor']['lattes']->isValid()){
             $professor = new Professor($request['professor']);
+            $professor->sapi = DB::select('select * from PROJETOS');
+            $professor->siatex = DB::connection('SIATEX')->select('select * from PROPOSTAS');
             $professor->makeReport();
             return Redirect::action('ReportsController@show')
                                     ->with('professor', $professor);

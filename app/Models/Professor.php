@@ -30,6 +30,8 @@ class Professor extends Model
 	private $year;
     private $points;
     private $pointsOrigin;
+    public $sapi;
+    public $siatex;
 
 	function __construct($attributes = array())
 	{
@@ -162,20 +164,21 @@ class Professor extends Model
      * @return boolean
      */
 	private function saveFile ($doi, $title){
-		$link = self::$DOI_PREFIX . $doi;
-		$client = new Client();
-		$crawler = $client->request('GET', $link);
-		if($crawler){
-			$html = '';
-			foreach($crawler as $domElement){
-			    $html .= $domElement->ownerDocument->saveHTML($domElement);
-			}
-			$file = fopen(__DIR__.'/../../storage/app/professor/'.$title.'.html', "w");
-			fwrite($file, utf8_encode($html));
-			fclose($file);
-			return true;
-		}
-		return false;
+		// $link = self::$DOI_PREFIX . $doi;
+		// $client = new Client();
+		// $crawler = $client->request('GET', $link);
+		// if($crawler){
+		// 	$html = '';
+		// 	foreach($crawler as $domElement){
+		// 	    $html .= $domElement->ownerDocument->saveHTML($domElement);
+		// 	}
+		// 	$file = fopen(__DIR__.'/../../storage/app/professor/'.$title.'.html', "w");
+		// 	fwrite($file, utf8_encode($html));
+		// 	fclose($file);
+		// 	return true;
+		// }
+		// return false;
+        return true;
 	}
 
     /**
@@ -230,5 +233,10 @@ class Professor extends Model
     				.$this->pointsOrigin[$category][$i]['title'].
 				  "</a><br />";
     	}
+    }
+
+    public function getSapi()
+    {
+        return $this->sapi;
     }
 }

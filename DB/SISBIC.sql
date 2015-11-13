@@ -14,7 +14,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sisbic
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `sisbic` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
+CREATE SCHEMA IF NOT EXISTS `sisbic` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
 USE `sisbic` ;
 
 -- -----------------------------------------------------
