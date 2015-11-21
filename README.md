@@ -5,8 +5,8 @@
 ##Conteúdo
 * Time de Desenvolvimento
 * Ferramentas utilizadas
-* Instalação do Laravel
 * Instalação das Dependências
+* Instalação do Laravel
 * Como rodar
 
 ## Time de Desenvolvimento
@@ -20,6 +20,14 @@
 * Composer (https://getcomposer.org/)
 * Laravel (http://laravel.com/)
 
+##Instalação das Dependências
+```
+$ sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
+$ git clone https://github.com/AdeilsonSilva/engsoft.git
+$ cd engsoft
+$ composer install
+```
+
 ##Instalação do Composer
 ```
 $ curl -sS https://getcomposer.org/installer | php
@@ -28,12 +36,6 @@ $ sudo mv composer.phar /usr/local/bin/composer
 ##Instalação do Laravel
 ```
 $ composer global require "laravel/installer=~1.1"
-```
-##Instalação das Dependências
-```
-$ git clone https://github.com/AdeilsonSilva/engsoft.git
-$ cd engsoft
-$ composer install
 ```
 
 ## Como rodar
