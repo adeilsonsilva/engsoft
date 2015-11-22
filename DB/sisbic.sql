@@ -10,10 +10,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sisbic
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `sisbic` ;
 
--- -----------------------------------------------------
--- Schema sisbic
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `sisbic` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
 USE `sisbic` ;
 
@@ -22,15 +20,25 @@ USE `sisbic` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sisbic`.`planos` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `Titulo` VARCHAR(45) NOT NULL,
-  `aluno` VARCHAR(45) NOT NULL,
-  `relatorio` VARCHAR(45) NOT NULL,
+  `titulo` VARCHAR(250) NOT NULL,
+  `orientador` VARCHAR(250) NOT NULL,
+  `aluno` VARCHAR(250) NOT NULL,
+  `relatorio` VARCHAR(250) NOT NULL,
   `status` TINYINT(1) NOT NULL,
-  `ano` DATE NOT NULL,
+  `ano` VARCHAR(250) NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `id_UNIQUE` ON `sisbic`.`planos` (`id` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO `sisbic`.`planos` (`id`, `titulo`, `orientador`, `aluno`, `relatorio`, `status`, `ano`)
+VALUES
+(1, 'RECONHECIMENTO FACIAL BASEADO EM IMAGENS COLORIDAS PARA AUTENTICAÇÃO CONTÍNUA', 'Mauricio Pamplona Segundo', 'João da Silva', 'Final', 1, '2014'),
+(2, 'Detecção de fraudes na autenticação facial multimodal', 'Mauricio Pamplona Segundo', 'Maria da Silva', 'Temporario', 0, '2015'),
+(3, 'Non-Functional Properties in Software Product Lines', 'Eduardo Santana de Almeida', 'Mário da Silva', 'Final', 0, '2013'),
+(4, 'Using a multi-method approach to understand Agile software product lines', 'Eduardo Santada de Almeida', 'Maria da Silva', 'Temporario', 1, '2014');

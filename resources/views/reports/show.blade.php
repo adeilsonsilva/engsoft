@@ -85,7 +85,7 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<h3 class="dropdown" onclick="drop(this, '.Siatex')">Pontuação calculada utilizando informações do Siatex. <i class="fa fa-chevron-down"></i></h3>
+			<h3 class="dropdown" onclick="drop(this, '.Siatex')">Pontuação calculada utilizando informações do SIATEX. <i class="fa fa-chevron-down"></i></h3>
 		</div>
 		<div class='Siatex'>
 			<div class="container">
@@ -111,8 +111,42 @@
 				</div>
 			</div>
 		</div>
+		<div class="form-group">
+			<h3 class="dropdown" onclick="drop(this, '.Sapi')">Pontuação calculada utilizando informações do SAPI. <i class="fa fa-chevron-down"></i></h3>
+		</div>
+		<div class='Sapi'>
+			<div class="container">
+				<div class="form-group">
+					<h4>
+						Pontos por coordenação de projetos de Pesquisa (cadastrados na pró-reitoria de graduação e pesquisa): <?php echo $professor->getSAPIPoints('coordenador'); ?>
+						<i class="fa fa-plus-square">
+							<div class="doi-links">
+								<?php $professor->showSAPIOrigin('coordenador'); ?>
+							</div>
+						</i>
+					</h4>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<h3 class="dropdown" onclick="drop(this, '.Sisbic')">Pontuação calculada utilizando informações do SISBIC. <i class="fa fa-chevron-down"></i></h3>
+		</div>
+		<div class='Sisbic'>
+			<div class="container">
+				<div class="form-group">
+					<h4>
+						Pontos por orientação de bolsas de Pesquisa: <?php echo $professor->getSISBICPoints('orientador'); ?>
+						<i class="fa fa-plus-square">
+							<div class="doi-links">
+								<?php $professor->showSISBICOrigin('orientador'); ?>
+							</div>
+						</i>
+					</h4>
+				</div>
+			</div>
+		</div>
 		<div>
-			<?php print_r($professor->getData('siatexPointsOrigin')); ?>
+			<?php //print_r($professor->getData('siatexPointsOrigin')); ?>
 		</div>
 	</body>
 	<script src="{{ asset('js/main.js') }}" type="text/javascript"></script>

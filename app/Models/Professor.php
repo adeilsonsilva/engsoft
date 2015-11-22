@@ -14,6 +14,7 @@ class Professor extends Model
 {
 
     /* Constants to calculate the score */
+    public static $DOI_PREFIX = "http://dx.doi.org/";
     public static $RESEARCH_POINTS = 5;
     public static $JOB_POINTS = 5;
     public static $ABSTRACT_POINTS = 1;
@@ -21,9 +22,9 @@ class Professor extends Model
     public static $BOOK_POINTS = 20;
     public static $TEXT_POINTS = 5;
     public static $MAX_YEAR = 2;
-    public static $DOI_PREFIX = "http://dx.doi.org/";
     public static $ELABORADOR_POINTS = 2;
     public static $COORDENADOR_POINTS = 2;
+    public static $ORIENTADOR_POINTS = 2;
 
     /* Class attributes */
     private $name;
@@ -34,10 +35,12 @@ class Professor extends Model
 	private $year;
     private $xmlPoints;
     private $xmlPointsOrigin;
-    public $siatexPoints;
-    public $siatexPointsOrigin;
-    public $sapi;
-    public $siatex;
+    private $siatexPoints;
+    private $siatexPointsOrigin;
+    private $sapiPoints;
+    private $sapiPointsOrigin;
+    private $sisbicPoints;
+    private $sisbicPointsOrigin;
 
 	function __construct($attributes = array())
 	{
@@ -60,12 +63,16 @@ class Professor extends Model
                                     'texts' => array());
 
         $this->siatexPoints = array('elaborador' => 0,
-							  'coordenador' => 0,
-							  'submissao' => 0);
+                              'coordenador' => 0,
+                              'submissao' => 0);
 
-		$this->siatexPointsOrigin = array('elaborador' => array(),
-									'coordenador' => array(),
-									'submissao' => array());
+        $this->siatexPointsOrigin = array('elaborador' => array(),
+                                    'coordenador' => array(),
+                                    'submissao' => array());
+
+        $this->sapiPoints = array('coordenador' => 0);
+
+		$this->sapiPointsOrigin = array('coordenador' => array());
 	}
 
 	/* Main User method to make report
@@ -74,6 +81,8 @@ class Professor extends Model
 	{
         $this->parseXML();
         $this->parseSIATEX();
+        $this->parseSAPI();
+        $this->parseSISBIC();
 	}
 
     public function parseSIATEX()
@@ -81,28 +90,75 @@ class Professor extends Model
         /* Cálculo de pontuação por elaboração ode projetos */
         $count = DB::connection('SIATEX')->table('propostas')
                             ->select('titulo')
-                            ->whereBetween('ano', array($this->year, $this->year+2))
+                            ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
                             ->where('elaborador', '=', $this->name)
+                            ->limit(5)
                             ->count();
+
         $this->siatexPointsOrigin['elaborador'] = DB::connection('SIATEX')->table('propostas')
                                                     ->select('titulo')
-                                                    ->whereBetween('ano', array($this->year, $this->year+2))
+                                                    ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
                                                     ->where('elaborador', '=', $this->name)
+                                                    ->limit(5)
                                                     ->get();
+
         $this->siatexPoints['elaborador'] = $count * self::$ELABORADOR_POINTS;
 
         /* Cálculo de pontuação por coordenação de projetos */
         $count = DB::connection('SIATEX')->table('propostas')
                             ->select('titulo')
-                            ->whereBetween('ano', array($this->year, $this->year+2))
+                            ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
                             ->where('coordenador', '=', $this->name)
+                            ->limit(1)
                             ->count();
+
         $this->siatexPointsOrigin['coordenador'] = DB::connection('SIATEX')->table('propostas')
                                                     ->select('titulo')
-                                                    ->whereBetween('ano', array($this->year, $this->year+2))
+                                                    ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
                                                     ->where('coordenador', '=', $this->name)
+                                                    ->limit(1)
                                                     ->get();
+
         $this->siatexPoints['coordenador'] = $count * self::$COORDENADOR_POINTS;
+    }
+
+    public function parseSAPI()
+    {
+
+        /* Cálculo de pontuação por coordenação de projetos */
+        $count = DB::connection('SAPI')->table('projetos')
+                            ->select('titulo')
+                            ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
+                            ->where('coordenador', '=', $this->name)
+                            ->limit(5)
+                            ->count();
+
+        $this->sapiPointsOrigin['coordenador'] = DB::connection('SAPI')->table('projetos')
+                                                    ->select('titulo')
+                                                    ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
+                                                    ->where('coordenador', '=', $this->name)
+                                                    ->limit(5)
+                                                    ->get();
+
+        $this->sapiPoints['coordenador'] = $count * self::$COORDENADOR_POINTS;
+    }
+
+    public function parseSISBIC()
+    {
+        /* Cálculo de pontuação por orientação de bolsas */
+        $count = DB::connection('SISBIC')->table('planos')
+                            ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
+                            ->where('orientador', '=', $this->name)
+                            ->limit(5)
+                            ->count();
+
+        $this->sisbicPointsOrigin['orientador'] = DB::connection('SISBIC')->table('planos')
+                                                    ->whereBetween('ano', array($this->year, $this->year + self::$MAX_YEAR))
+                                                    ->where('orientador', '=', $this->name)
+                                                    ->limit(5)
+                                                    ->get();
+
+        $this->sisbicPoints['orientador'] = $count * self::$ORIENTADOR_POINTS;
     }
 
     /**
@@ -285,7 +341,7 @@ class Professor extends Model
     public function showXMLOrigin($category)
     {
         for($i=0; $i < count($this->xmlPointsOrigin[$category]); $i++){
-            echo "<a href=\"".$this->xmlPointsOrigin[$category][$i]['link']."\">"
+            echo "<a target=\"__blank\" href=\"".$this->xmlPointsOrigin[$category][$i]['link']."\">"
                     .$this->xmlPointsOrigin[$category][$i]['title'].
                   "</a><br />";
         }
@@ -300,8 +356,38 @@ class Professor extends Model
     {
         for($i = 0; $i < count($this->siatexPointsOrigin[$category]); $i++){
             echo "<p>"
-                    . "Nome do Projeto: "
+                    . "Nome da Proposta: "
                     .$this->siatexPointsOrigin[$category][$i]->titulo.
+                  "</p>";
+        }
+    }
+
+    public function getSAPIPoints($category)
+    {
+        return $this->sapiPoints[$category];
+    }
+
+    public function showSAPIOrigin($category)
+    {
+        for($i = 0; $i < count($this->sapiPointsOrigin[$category]); $i++){
+            echo "<p>"
+                    . "Nome do Projeto: "
+                    .$this->sapiPointsOrigin[$category][$i]->titulo.
+                  "</p>";
+        }
+    }
+
+    public function getSISBICPoints($category)
+    {
+        return $this->sisbicPoints[$category];
+    }
+
+    public function showSISBICOrigin($category)
+    {
+        for($i = 0; $i < count($this->sisbicPointsOrigin[$category]); $i++){
+            echo "<p>"
+                    . "Nome do Plano: "
+                    .$this->sisbicPointsOrigin[$category][$i]->titulo.
                   "</p>";
         }
     }

@@ -20,13 +20,11 @@ USE `siatex` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `siatex`.`propostas` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `titulo` VARCHAR(45) NOT NULL,
-  `modalidade` VARCHAR(45) NOT NULL,
-  `elaborador` VARCHAR(45) NOT NULL,
-  `coordenador` VARCHAR(45) NOT NULL,
-  `registro` TINYINT(1) NOT NULL,
-  `submissão` TINYINT(1) NOT NULL,
-  `ano` VARCHAR(45) NULL,
+  `titulo` VARCHAR(250) NOT NULL,
+  `modalidade` VARCHAR(250) NOT NULL,
+  `elaborador` VARCHAR(250) NOT NULL,
+  `coordenador` VARCHAR(250) NOT NULL,
+  `ano` VARCHAR(250) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -35,3 +33,10 @@ CREATE UNIQUE INDEX `id_UNIQUE` ON `siatex`.`propostas` (`id` ASC);
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO `siatex`.`propostas` (`id`, `titulo`, `modalidade`, `elaborador`, `coordenador`, `ano`)
+VALUES
+(1, 'GruPro', 'Projeto', 'Mauricio Pamplona Segundo', 'Rubisley Lemes', '2014'),
+(2, 'SisProg', 'Projeto', 'Eduardo Santana de Almeida', 'Mauricio Pamplona Segundo', '2015'),
+(3, 'Curso de Programação', 'Curso', 'Mauricio Pamplona Segundo', 'Rubisley Lemes', '2016'),
+(4, 'Programa de Residência em Reuso de Software', 'Curso', 'Eduardo Santana de Almeida', 'Ivan do Carmo', '2014');

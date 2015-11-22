@@ -14,6 +14,8 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema sapi
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `sapi` ;
+
 CREATE SCHEMA IF NOT EXISTS `sapi` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
 USE `sapi` ;
 
@@ -22,13 +24,23 @@ USE `sapi` ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `sapi`.`projetos` (
   `id` INT NOT NULL,
-  `titulo` VARCHAR(45) NOT NULL,
-  `programa` VARCHAR(45) NOT NULL,
-  `ano` VARCHAR(45) NULL,
+  `titulo` VARCHAR(250) NOT NULL,
+  `coordenador` VARCHAR(250) NOT NULL,
+  `programa` VARCHAR(250) NOT NULL,
+  `ano` VARCHAR(250) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `id_UNIQUE` ON `sapi`.`projetos` (`id` ASC);
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+INSERT INTO `sapi`.`projetos` (`id`, `titulo`, `coordenador`, `programa`, `ano`)
+VALUES
+(1, 'Engenharia de Linhas de Produto de Software Baseada em Evidências', 'Eduardo Santana de Almeida', 'CNPq', '2014'),
+(2, 'RESCUER: Reliable and Smart Analysis of Crowdsourcing Information for Emergency and Crisis Management', 'Eduardo Santana de Almeida', 'PIBITI', '2013'),
+(3, 'Autenticação contínua de indivíduos baseada em múltiplas propriedades faciais', 'Mauricio Pamplona Segundo', 'PIBITI', '2015'),
+(4, 'AUTENTICAÇÃO CONTÍNUA DE INDIVÍDUOS COM APLICAÇÃO EM TELEMEDICINA', 'Mauricio Pamplona Segundo', 'PIBIC', '2014');
