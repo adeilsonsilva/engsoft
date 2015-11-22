@@ -18,13 +18,13 @@ CREATE SCHEMA IF NOT EXISTS `sapi` DEFAULT CHARACTER SET utf8 COLLATE utf8_unico
 USE `sapi` ;
 
 -- -----------------------------------------------------
--- Table `sapi`.`PROJETOS`
+-- Table `sapi`.`projetos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sapi`.`PROJETOS` (
+CREATE TABLE IF NOT EXISTS `sapi`.`projetos` (
   `id` INT NOT NULL,
-  `TITULO` VARCHAR(45) NOT NULL,
-  `PROGRAMA` VARCHAR(45) NOT NULL,
-  `ANO` VARCHAR(45) NULL,
+  `titulo` VARCHAR(45) NOT NULL,
+  `programa` VARCHAR(45) NOT NULL,
+  `ano` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 

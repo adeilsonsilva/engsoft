@@ -45,8 +45,6 @@ class ReportsController extends Controller
     {
         if ($request['professor']['lattes']->isValid()){
             $professor = new Professor($request['professor']);
-            $professor->sapi = DB::select('select * from PROJETOS');
-            $professor->siatex = DB::connection('SIATEX')->select('select * from PROPOSTAS');
             $professor->makeReport();
             return Redirect::action('ReportsController@show')
                                     ->with('professor', $professor);

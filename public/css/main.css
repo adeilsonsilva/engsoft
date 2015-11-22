@@ -1,7 +1,12 @@
-.doi-links{
+.Lattes, .Siatex, .doi-links{
 	display: none;
 }
 
 .fa {
     display: inline;
+}
+
+.dropdown:hover {
+    color: blue;
+    cursor: pointer;
 }

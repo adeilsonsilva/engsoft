@@ -10,24 +10,27 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 -- -----------------------------------------------------
 -- Schema siatex
 -- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `siatex` ;
 
--- -----------------------------------------------------
--- Schema siatex
--- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `siatex` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
 USE `siatex` ;
 
 -- -----------------------------------------------------
--- Table `siatex`.`PROPOSTAS`
+-- Table `siatex`.`propostas`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `siatex`.`PROPOSTAS` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `TITULO` VARCHAR(45) NOT NULL,
-  `MODALIDADE` VARCHAR(45) NOT NULL,
-  `REGISTRO` TINYINT(1) NOT NULL,
+CREATE TABLE IF NOT EXISTS `siatex`.`propostas` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `titulo` VARCHAR(45) NOT NULL,
+  `modalidade` VARCHAR(45) NOT NULL,
+  `elaborador` VARCHAR(45) NOT NULL,
+  `coordenador` VARCHAR(45) NOT NULL,
+  `registro` TINYINT(1) NOT NULL,
+  `submissão` TINYINT(1) NOT NULL,
+  `ano` VARCHAR(45) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
+CREATE UNIQUE INDEX `id_UNIQUE` ON `siatex`.`propostas` (`id` ASC);
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

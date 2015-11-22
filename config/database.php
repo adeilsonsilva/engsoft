@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'SAPI'),
+    'default' => env('DB_CONNECTION', 'SIATEX'),
 
     /*
     |--------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 
 namespace App;
 
+use DB;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Session;
 use Symfony\Component\DomCrawler\Crawler;
@@ -20,6 +22,8 @@ class Professor extends Model
     public static $TEXT_POINTS = 5;
     public static $MAX_YEAR = 2;
     public static $DOI_PREFIX = "http://dx.doi.org/";
+    public static $ELABORADOR_POINTS = 2;
+    public static $COORDENADOR_POINTS = 2;
 
     /* Class attributes */
     private $name;
@@ -28,8 +32,10 @@ class Professor extends Model
 	private $lattesFile;
 	private $rank;
 	private $year;
-    private $points;
-    private $pointsOrigin;
+    private $xmlPoints;
+    private $xmlPointsOrigin;
+    public $siatexPoints;
+    public $siatexPointsOrigin;
     public $sapi;
     public $siatex;
 
@@ -39,32 +45,69 @@ class Professor extends Model
 		$this->year = $attributes['year'];
         $file = utf8_encode(file_get_contents($attributes['lattes']->getRealPath()));
         $this->lattesFile = new Crawler($file);
-		$this->points = array('research' => 0,
-							  'jobs' => 0,
-							  'abstracts' => 0,
-							  'papers' => 0,
-							  'books' => 0,
-							  'texts' => 0);
+        $this->xmlPoints = array('research' => 0,
+                              'jobs' => 0,
+                              'abstracts' => 0,
+                              'papers' => 0,
+                              'books' => 0,
+                              'texts' => 0);
 
-		$this->pointsOrigin = array('research' => array(),
-									'jobs' => array(),
-									'abstracts' => array(),
-									'papers' => array(),
-									'books' => array(),
-									'texts' => array());
+        $this->xmlPointsOrigin = array('research' => array(),
+                                    'jobs' => array(),
+                                    'abstracts' => array(),
+                                    'papers' => array(),
+                                    'books' => array(),
+                                    'texts' => array());
+
+        $this->siatexPoints = array('elaborador' => 0,
+							  'coordenador' => 0,
+							  'submissao' => 0);
+
+		$this->siatexPointsOrigin = array('elaborador' => array(),
+									'coordenador' => array(),
+									'submissao' => array());
 	}
 
 	/* Main User method to make report
 	 */
 	public function makeReport()
 	{
-		$this->parseXML();
+        $this->parseXML();
+        $this->parseSIATEX();
 	}
 
+    public function parseSIATEX()
+    {
+        /* Cálculo de pontuação por elaboração ode projetos */
+        $count = DB::connection('SIATEX')->table('propostas')
+                            ->select('titulo')
+                            ->whereBetween('ano', array($this->year, $this->year+2))
+                            ->where('elaborador', '=', $this->name)
+                            ->count();
+        $this->siatexPointsOrigin['elaborador'] = DB::connection('SIATEX')->table('propostas')
+                                                    ->select('titulo')
+                                                    ->whereBetween('ano', array($this->year, $this->year+2))
+                                                    ->where('elaborador', '=', $this->name)
+                                                    ->get();
+        $this->siatexPoints['elaborador'] = $count * self::$ELABORADOR_POINTS;
+
+        /* Cálculo de pontuação por coordenação de projetos */
+        $count = DB::connection('SIATEX')->table('propostas')
+                            ->select('titulo')
+                            ->whereBetween('ano', array($this->year, $this->year+2))
+                            ->where('coordenador', '=', $this->name)
+                            ->count();
+        $this->siatexPointsOrigin['coordenador'] = DB::connection('SIATEX')->table('propostas')
+                                                    ->select('titulo')
+                                                    ->whereBetween('ano', array($this->year, $this->year+2))
+                                                    ->where('coordenador', '=', $this->name)
+                                                    ->get();
+        $this->siatexPoints['coordenador'] = $count * self::$COORDENADOR_POINTS;
+    }
+
     /**
-     * XML parsing.
+     * XML file parsing.
      *
-     * @return Points.
      */
     private function parseXML()
     {
@@ -80,7 +123,17 @@ class Professor extends Model
 					   ->nextAll()
 					   ->each(function ($node, $i)
 						{
-						  echo $node->children()->attr('ANO-INICIO')."\n";
+                            $DOI = utf8_decode($node->children()->attr('DOI'));
+                            $researchYear = $node->children()->attr('ANO-INICIO');
+                            $title = utf8_decode($node->children()->attr('NOME-DO-PROJETO'));
+                            if(($DOI) && ($this->validateYear($researchYear) && $this->saveFile($DOI, $title))){
+                                $researchYearEnd = $node->children()->attr('ANO-FIM');
+                                if (($researchYearEnd) && $researchYearEnd - $researchYear >= 2){
+                                    $this->xmlPoints['research'] += self::$PAPER_POINTS;
+                                    $origin = array('title' => $title, 'link' => self::$DOI_PREFIX.$DOI);
+                                    array_push($this->xmlPointsOrigin['research'], $origin);
+                                }
+                            }
 						});
 		}catch(\Exception $e){
 			var_dump($e->getMessage());
@@ -97,12 +150,12 @@ class Professor extends Model
 							$title = utf8_decode($node->children()->attr('TITULO-DO-TRABALHO'));
 							if(($DOI) && ($this->validateYear($jobYear) && $this->saveFile($DOI, $title))){
 								if($node->children()->attr('NATUREZA') === 'RESUMO'){
-									$this->points['jobs'] += self::$ABSTRACT_POINTS;
+									$this->xmlPoints['jobs'] += self::$ABSTRACT_POINTS;
 								}else {
-									$this->points['jobs'] += self::$JOB_POINTS;
+									$this->xmlPoints['jobs'] += self::$JOB_POINTS;
 								}
 								$origin = array('title' => $title, 'link' => self::$DOI_PREFIX.$DOI);
-								array_push($this->pointsOrigin['jobs'], $origin);							}
+								array_push($this->xmlPointsOrigin['jobs'], $origin);							}
 						});
 		}catch(\Exception $e){
 			var_dump($e->getMessage());
@@ -115,12 +168,12 @@ class Professor extends Model
 					   ->each(function ($node, $i)
 						{
 							$DOI = utf8_decode($node->children()->attr('DOI'));
-							$paperYear = $node->children()->attr('ANO-DO-ARTIGO');
+							$abstractYear = $node->children()->attr('ANO-DO-ARTIGO');
 							$title = utf8_decode($node->children()->attr('TITULO-DO-ARTIGO'));
-						  	if(($DOI) && ($this->validateYear($paperYear) && $this->saveFile($DOI, $title))){
-						  		$this->points['papers'] += self::$PAPER_POINTS;
+						  	if(($DOI) && ($this->validateYear($abstractYear) && $this->saveFile($DOI, $title))){
+						  		$this->xmlPoints['papers'] += self::$PAPER_POINTS;
 						  		$origin = array('title' => $title, 'link' => self::$DOI_PREFIX.$DOI);
-					  			array_push($this->pointsOrigin['papers'], $origin);
+					  			array_push($this->xmlPointsOrigin['papers'], $origin);
 						  	}
 						});
 		}catch(\Exception $e){
@@ -133,8 +186,13 @@ class Professor extends Model
 					   ->nextAll()
 					   ->each(function ($node, $i)
 						{
-						  	if($node->children()->attr('DOI')){
-								echo $node->children()->attr('ANO')."\n";
+                            $DOI = utf8_decode($node->children()->attr('DOI'));
+                            $bookYear = $node->children()->attr('ANO');
+                            $title = utf8_decode($node->children()->attr('TITULO-DO-LIVRO'));
+						  	if(($DOI) && ($this->validateYear($bookYear) && $this->saveFile($DOI, $title))){
+					            $this->xmlPoints['books'] += self::$BOOK_POINTS;
+                                $origin = array('title' => $title, 'link' => self::$DOI_PREFIX.$DOI);
+                                array_push($this->xmlPointsOrigin['books'], $origin);
 							}
 						});
 		}catch(\Exception $e){
@@ -147,15 +205,18 @@ class Professor extends Model
 					   ->nextAll()
 					   ->each(function ($node, $i)
 						{
-						  	if($node->children()->attr('DOI')){
-						  		echo $node->children()->attr('ANO-DO-TEXTO')."\n";
-						  	}
+                            $DOI = utf8_decode($node->children()->attr('DOI'));
+                            $textYear = $node->children()->attr('ANO-DO-TEXTO');
+                            $title = utf8_decode($node->children()->attr('TITULO-DO-TEXTO'));
+                            if(($DOI) && ($this->validateYear($textYear) && $this->saveFile($DOI, $title))){
+                                $this->xmlPoints['texts'] += self::$TEXT_POINTS;
+                                $origin = array('title' => $title, 'link' => self::$DOI_PREFIX.$DOI);
+                                array_push($this->xmlPointsOrigin['texts'], $origin);
+                            }
 						});
 		}catch(\Exception $e){
 			var_dump($e->getMessage());
 		}
-
-        return $this->points;
     }
 
     /**
@@ -199,10 +260,10 @@ class Professor extends Model
      */
     private function download($professorName, $filePath)
     {
-            $headers = array(
-                  'Content-Type: application/zip'
-                );
-            return Response::download($filePath, $professorName + ".zip", $headers);
+        $headers = array(
+              'Content-Type: application/zip'
+            );
+        return Response::download($filePath, $professorName + ".zip", $headers);
     }
 
     /**
@@ -211,32 +272,38 @@ class Professor extends Model
 	 * @return attribute
      */
 
-    public function getName()
+    public function getData($data)
     {
-    	return $this->name;
+        return $this->$data;
     }
 
-    public function getYear()
+    public function getXMLPoints($category)
     {
-    	return $this->year;
+        return $this->xmlPoints[$category];
     }
 
-    public function getPoints($category)
+    public function showXMLOrigin($category)
     {
-    	return $this->points[$category];
+        for($i=0; $i < count($this->xmlPointsOrigin[$category]); $i++){
+            echo "<a href=\"".$this->xmlPointsOrigin[$category][$i]['link']."\">"
+                    .$this->xmlPointsOrigin[$category][$i]['title'].
+                  "</a><br />";
+        }
     }
 
-    public function showOrigin($category)
+    public function getSIATEXPoints($category)
     {
-    	for($i=0; $i < count($this->pointsOrigin[$category]); $i++){
-    		echo "<a href=\"".$this->pointsOrigin[$category][$i]['link']."\">"
-    				.$this->pointsOrigin[$category][$i]['title'].
-				  "</a><br />";
-    	}
+        return $this->siatexPoints[$category];
     }
 
-    public function getSapi()
+    public function showSIATEXOrigin($category)
     {
-        return $this->sapi;
+        for($i = 0; $i < count($this->siatexPointsOrigin[$category]); $i++){
+            echo "<p>"
+                    . "Nome do Projeto: "
+                    .$this->siatexPointsOrigin[$category][$i]->titulo.
+                  "</p>";
+        }
     }
+
 }

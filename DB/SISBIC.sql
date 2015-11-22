@@ -18,15 +18,15 @@ CREATE SCHEMA IF NOT EXISTS `sisbic` DEFAULT CHARACTER SET utf8 COLLATE utf8_uni
 USE `sisbic` ;
 
 -- -----------------------------------------------------
--- Table `sisbic`.`PLANOS`
+-- Table `sisbic`.`planos`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `sisbic`.`PLANOS` (
+CREATE TABLE IF NOT EXISTS `sisbic`.`planos` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `TituloPLANO` VARCHAR(45) NOT NULL,
-  `ALUNO` VARCHAR(45) NOT NULL,
-  `RELATORIO` VARCHAR(45) NOT NULL,
-  `STATUS` TINYINT(1) NOT NULL,
-  `ANO` DATE NOT NULL,
+  `Titulo` VARCHAR(45) NOT NULL,
+  `aluno` VARCHAR(45) NOT NULL,
+  `relatorio` VARCHAR(45) NOT NULL,
+  `status` TINYINT(1) NOT NULL,
+  `ano` DATE NOT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
