@@ -44,7 +44,7 @@ class Professor extends Model
 
 	function __construct($attributes = array())
 	{
-		$this->name = $attributes['name'];
+		// $this->name = $attributes['name'];
 		$this->year = $attributes['year'];
         $file = utf8_encode(file_get_contents($attributes['lattes']->getRealPath()));
         $this->lattesFile = new Crawler($file);
@@ -167,11 +167,22 @@ class Professor extends Model
      */
     private function parseXML()
     {
+        $namePATH = '//CURRICULO-VITAE/DADOS-GERAIS';
     	$researchPATH = '//CURRICULO-VITAE/DADOS-GERAIS/ATUACOES-PROFISSIONAIS/ATIVIDADES-DE-PARTICIPACAO-EM-PROJETO/PARTICIPACAO-EM-PROJETO';
     	$eventsPATH = '//CURRICULO-VITAE/PRODUCAO-BIBLIOGRAFICA/TRABALHOS-EM-EVENTOS';
     	$abstractsPATH = '//CURRICULO-VITAE/PRODUCAO-BIBLIOGRAFICA/ARTIGOS-PUBLICADOS';
     	$booksPATH = '//CURRICULO-VITAE/PRODUCAO-BIBLIOGRAFICA/LIVROS-E-CAPITULOS/LIVROS-PUBLICADOS-OU-ORGANIZADOS';
     	$textsPATH = '//CURRICULO-VITAE/PRODUCAO-BIBLIOGRAFICA/TEXTOS-EM-JORNAIS-OU-REVISTAS';
+
+        try{
+            $this->lattesFile->filterXPath($namePATH)
+                       ->each(function ($node, $i)
+                        {
+                            $this->name = utf8_decode($node->attr('NOME-COMPLETO'));
+                        });
+        }catch(\Exception $e){
+            var_dump($e->getMessage());
+        }
 
     	try{
     		$this->lattesFile->filterXPath($researchPATH)
