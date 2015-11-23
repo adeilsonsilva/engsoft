@@ -24,16 +24,6 @@
 			<div class="container">
 				<div class="form-group">
 					<h4>
-						Pontos por bolsa de produtividade do CNPq:  <?php echo $professor->getXMLPoints('research'); ?>
-						<i class="fa fa-plus-square">
-							<div class="doi-links">
-								<?php $professor->showXMLOrigin('research'); ?>
-							</div>
-						</i>
-					</h4>
-				</div>
-				<div class="form-group">
-					<h4>
 						Pontos por publicação de trabalhos completos em anais de congressos: <?php echo $professor->getXMLPoints('jobs'); ?>
 						<i class="fa fa-plus-square">
 							<div class="doi-links">
