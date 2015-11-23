@@ -11,20 +11,6 @@
 			<h1>Geração de Relatório</h1>
 		</div>
 		<form action="{{ action('ReportsController@store') }}" method="post" enctype="multipart/form-data" class="col-sm-4">
-			<div class="form-group">
-<!-- 				<label for="professor_name">Nome</label>
-				<input type="text" name="professor[name]" class="form-control"></input>
-				<br></br>
-				<select required>
-					<option value=""> Selecione seu nome... </option>
-					<option value="Eduardo de Almeida Santana">Eduardo de Almeida Santana</option>
-					<option value="Maurício Pamplona Segundo">Maurício Pamplona Segundo</option>
-					<option value="Eduardo de Almeida Santana">Eduardo de Almeida Santana</option>
-					<option value="Eduardo de Almeida Santana">Eduardo de Almeida Santana</option>
-					<option value="Eduardo de Almeida Santana">Eduardo de Almeida Santana</option>
-					<option value="Eduardo de Almeida Santana">Eduardo de Almeida Santana</option>
-				</select> -->
-			</div>
 			<div class="form-group" hidden>
 				<label for="professor_cpf">C.P.F</label>
 				<input type="text" name="professor[cpf]" class="form-control">
