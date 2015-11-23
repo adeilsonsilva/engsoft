@@ -22,10 +22,7 @@
 
 ##Instalação das Dependências
 ```
-$ sudo apt-get install mysql-server libapache2-mod-auth-mysql php5-mysql
-$ git clone https://github.com/AdeilsonSilva/engsoft.git
-$ cd engsoft
-$ composer install
+$ sudo apt-get install curl mysql-server libapache2-mod-auth-mysql php5-mysql
 ```
 
 ##Instalação do Composer
@@ -40,5 +37,8 @@ $ composer global require "laravel/installer=~1.1"
 
 ## Como rodar
 ```
- $ php artisan serve
- ```
+$ git clone https://github.com/AdeilsonSilva/engsoft.git
+$ cd engsoft
+$ composer install
+$ php artisan serve
+```
